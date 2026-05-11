@@ -1,0 +1,16 @@
+/backend/node_modules/
+/frontend/node_modules/
+/frontend/server.js
+node_modules/
+
+*.csv
+*.log
+*.pdf
+*.sh
+
+.env
+.env.production
+.env.local
+frontend/.env
+frontend/.env.production
+backend/.env

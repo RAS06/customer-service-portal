@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: sia-backend
+    repo: https://github.com/RAS06/study_in_sociable_service_agents.git
+    branch: master
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: MASTER_KEY
+        sync: false
+    region: oregon
+
+  - type: web
+    name: sia-frontend
+    repo: https://github.com/RAS06/study_in_sociable_service_agents.git
+    branch: master
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          name: sia-backend
+          type: web
+          property: host
+    region: oregon

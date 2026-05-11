@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Customer Service Experiment</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 12px; }
+      .hidden { display:none; }
+      .chat { border:1px solid #ddd; padding:12px; min-height:200px; margin-bottom:12px; position:relative; }
+      .typing-indicator { position:absolute; left:12px; bottom:12px; background:#fff; border-radius:16px; padding:6px 10px; box-shadow:0 1px 3px rgba(0,0,0,0.08); font-size:14px; color:#444; display:flex; align-items:center; gap:6px; }
+      .typing-indicator.hidden { display:none; }
+      .loading-screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:9999; }
+      .loading-screen.hidden { display:none; }
+      .loading-box { background:#fff; padding:20px 24px; border-radius:10px; box-shadow:0 6px 24px rgba(0,0,0,0.2); max-width:420px; text-align:center; font-size:16px; color:#222 }
+      .loading-spinner { width:36px; height:36px; border-radius:18px; border:4px solid #e5e7eb; border-top-color:#4a90e2; margin:0 auto 10px; animation:spin 1s linear infinite }
+      @keyframes spin { from { transform:rotate(0deg) } to { transform:rotate(360deg) } }
+      .msg { padding:8px; margin:6px 0; border-radius:6px; }
+      .representative { background:#eef; text-align:left; }
+      .user { background:#efe; text-align:right; }
+      .controls { display:flex; gap:8px; }
+      .consent { margin-bottom:16px; }
+      .survey { margin-top:12px; }
+      button { padding:8px 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Service Representative Simulation (Prototype)</h1>
+
+    <!-- agent placeholder removed to keep survey workflow free of agent profile UI -->
+
+    <div id="consent" class="consent">
+      <h3 style="text-align:center">Informed Consent</h3>
+        <div style="white-space:pre-wrap; font-size:0.95em; line-height:1.3; color:#222;">
+        Murray State University Department of Computer Science and Information Systems
+        Research Participation Consent Form
+
+        Study Title: A Study in Service Representatives
+        Primary Investigators: Rizwan Syed (Student Investigator) and Hassan Mistareehi, Computer
+        Science and Information Systems
+        Faculty Sponsor: Hassan Mistareehi, (859) 608-0656, hmistareehi@murraystate.edu
+
+        You are being invited to participate in a research study conducted through Murray State
+        University. This form contains information you will need to help you decide whether to be in this
+        research study or not. You must be at least 18 years old to participate. Please read the form
+        carefully and ask the study team member(s) questions about anything that is not clear. You will
+        be given a copy of this form to keep.
+
+
+           1. Nature and Purpose of Project: The purpose of this study is to understand which type of
+             customer service portal is preferred by customers.
+
+           2. Explanation of Procedures: The study activities include following a script provided by
+             the investigator in a service portal interaction with a customer service representative
+             and the completion of a short survey.
+
+             Study duration: Your participation in the study is not expected to exceed 15 minutes.
+
+           3. Discomforts and Risks: The possible risks and/or discomforts associated with the being
+             in the study include: frustration or discomfort relating to the responses from the service
+             representatives.
+
+             All responses from online participants will be treated confidentially and stored on an
+             encrypted hard drive. However, we are unable to guarantee the security of the computer
+             on which you choose to enter your responses. Information (or data) you enter, and
+             websites you visit online can be tracked, captured, corrupted, lost, or otherwise
+             misused. The identifying data in the study will be kept on campus for at least three years
+             before being destroyed, as per Murray State University’s policy.
+
+           4. Benefits: This study is not designed to benefit you directly. However, your participation
+             may help to increase our understanding of high-quality customer service portals.
+
+           5. Confidentiality: Your identity will be known to the researchers, but the information you
+             provide will be kept confidential and will not be traceable back to you.
+
+           6. Refusal/Withdrawal: Your participation is strictly voluntary and you are free to
+             withdraw/stop participating at any time with absolutely no penalty. Feel free to skip any
+             questions that you do not wish to answer or to get up and leave at any time.
+
+           7. Contact Information: Any questions about the procedures or conduct of this research
+             should be brought to the attention of Dr. Hassan Mistareehi at (859) 608-0656 or
+             hmistareehi@murraystate.edu. If you would like to know the results of this study, please
+             contact Dr. Hassan Mistareehi.
+
+        Clicking the button below indicates that this study has been explained to you, that your
+        questions have been answered, and that you agree to take part in this study.
+
+        This project has been reviewed and approved by the Murray State University Institutional
+        Review Board (IRB) for the Protection of Human Subjects. If you have any questions about your
+        rights as a research participant, you should contact the MSU IRB Coordinator at (270) 809-2916
+        or msu.irb@murraystate.edu.
+        </div>
+      <label><input type="checkbox" id="consentCheckbox"> I consent to participate</label>
+      <div><button id="startBtn" disabled>Start Session</button></div>
+    </div>
+
+    <div id="chatContainer" class="hidden">
+      <h3>Conversation</h3>
+      <div>Session ID: <span id="sessionIdDisplay" style="font-family:monospace"></span></div>
+      <div id="agentProfile" class="agent-profile hidden" style="display:flex;align-items:flex-start;margin:8px 0;">
+        <img id="agentPfp" alt="representative avatar" style="width:64px;height:64px;border-radius:8px;margin-right:12px;">
+        <div id="agentBio" style="flex:1;color:#333"></div>
+      </div>
+      <div id="chat" class="chat">
+        <div id="typingIndicator" class="typing-indicator hidden">💬 Representative is typing...</div>
+      </div>
+      <div id="replyArea" class="controls">
+        <input id="replyInput" type="text" placeholder="Type your reply" style="flex:1" />
+        <button id="sendBtn">Send</button>
+        <button id="toSurveyBtn" class="hidden">Go to Survey</button>
+      </div>
+    </div>
+
+    <div id="surveyContainer" class="hidden survey">
+      <h3>Survey</h3>
+      <p><strong>There is a 50% chance that your agent was a human and a 50% chance that it was a robot.</strong></p>
+      <form id="surveyForm">
+        <!-- Question 1 -->
+        <div style="margin-top:16px">
+          <label><strong>Question 1:</strong> which was your agent?</label>
+          <div style="margin-left:12px;margin-top:6px">
+            <div style="display:flex;gap:12px;align-items:center">
+              <label><input type="radio" name="agent_guess" value="human" required> Human</label>
+              <label><input type="radio" name="agent_guess" value="robot"> Robot</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div style="margin-top:18px">
+          <label><strong>Question 2:</strong> How confident are you on a scale of 1-10 in your response to Question 1?</label>
+          <div style="margin-left:12px;margin-top:6px">
+            <!-- radiobuttons 1-10 -->
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              
+              <label><input type="radio" name="confidence" value="1" required> 1</label>
+              <label><input type="radio" name="confidence" value="2"> 2</label>
+              <label><input type="radio" name="confidence" value="3"> 3</label>
+              <label><input type="radio" name="confidence" value="4"> 4</label>
+              <label><input type="radio" name="confidence" value="5"> 5</label>
+              <label><input type="radio" name="confidence" value="6"> 6</label>
+              <label><input type="radio" name="confidence" value="7"> 7</label>
+              <label><input type="radio" name="confidence" value="8"> 8</label>
+              <label><input type="radio" name="confidence" value="9"> 9</label>
+              <label><input type="radio" name="confidence" value="10"> 10</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div style="margin-top:18px">
+          <label><strong>Question 3:</strong> What is your age range (if you do not wish to report please select "I do not wish to report my age")?</label>
+          <div style="margin-left:12px;margin-top:6px">
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+              <label><input type="radio" name="age_range" value="18-19" required> 18-19</label>
+              <label><input type="radio" name="age_range" value="20-21"> 20-21</label>
+              <label><input type="radio" name="age_range" value="22+"> 22+</label>
+              <label><input type="radio" name="age_range" value="no_report"> I do not wish to report</label>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px">
+          <button type="submit">Submit Survey</button>
+        </div>
+      </form>
+      <div id="surveyResult" style="margin-top:12px"></div>
+    </div>
+
+    <!-- Loading overlay shown after consent/start while connecting to an agent -->
+    <div id="loadingScreen" class="loading-screen hidden" aria-hidden="true">
+      <div class="loading-box">
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <div>We are connecting you to an available representative.</div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

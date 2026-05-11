@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Representative PFP Preview</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width:900px; margin:24px auto; padding:0 12px; }
+      .row { display:flex; gap:16px; align-items:center; margin:18px 0; }
+      .card { border:1px solid #ddd; padding:12px; border-radius:8px; width:100%; display:flex; gap:12px; align-items:center }
+      img.avatar { width:96px; height:96px; border-radius:12px; object-fit:cover; background:#f3f4f6 }
+      .avatar-svg { width:96px; height:96px; border-radius:48px; display:inline-block }
+      h1 { margin-top:6px }
+      .meta { color:#444 }
+      .note { color:#666; font-size:13px }
+    </style>
+  </head>
+  <body>
+    <h1>Representative Profile Image Preview</h1>
+    <p class="note">This page previews the images used by the prototype. Open <a href="/">app</a> to test in-context.</p>
+
+    <section>
+      <h2>Minimalistic (blue circle with initials "AK")</h2>
+      <div class="row">
+        <div class="card">
+          <!-- generated SVG avatar for Alen Kanerak -->
+          <div class="avatar-svg" aria-hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" width="96" height="96">
+              <rect width="100%" height="100%" rx="48" ry="48" fill="#1e40af" />
+              <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="36" fill="#fff">AK</text>
+            </svg>
+          </div>
+          <div>
+            <div style="font-weight:600">Minimalistic Bot</div>
+            <div class="meta">Short and direct. Minimal explanations, gets to the point quickly.</div>
+            <div class="note">This avatar is generated as an SVG (blue circle) with initials "AK".</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Polite (uploaded image)</h2>
+      <div class="row">
+        <div class="card">
+          <img class="avatar" src="/images/RSyed_Polite_and_Relatable_Model_PFP_HMistareehi.png" alt="Polite representative image" onerror="this.style.opacity=.4; this.nextElementSibling.textContent='(image not found: /images/RSyed_Polite_and_Relatable_Model_PFP_HMistareehi.png)';"/>
+          <div>
+            <div style="font-weight:600">Polite Helper</div>
+            <div class="meta">Warm, apologetic, and helpful. Guides users gently through the flow.</div>
+            <div class="note">Image path: <code>/images/polite.png</code></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Professional (uploaded image)</h2>
+      <div class="row">
+        <div class="card">
+          <img class="avatar" src="/images/RSyed_Professional_PFP_HMistareehi.png" alt="Professional representative image" onerror="this.style.opacity=.4; this.nextElementSibling.textContent='(image not found: /images/RSyed_Professional_PFP_HMistareehi.png)';"/>
+          <div>
+            <div style="font-weight:600">Professional Support</div>
+            <div class="meta">Formal and concise. Focuses on process and accuracy.</div>
+            <div class="note">Image path: <code>/images/professional.png</code></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>High Emotionality</h2>
+      <div class="row">
+        <div class="card">
+          <div style="width:96px;height:96px;border-radius:12px;background:#fff;border:1px dashed #e5e7eb;display:flex;align-items:center;justify-content:center;color:#999">No avatar</div>
+          <div>
+            <div style="font-weight:600">High Emotion Representative</div>
+            <div class="meta">This representative intentionally has no profile or avatar.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </body>
+</html>
