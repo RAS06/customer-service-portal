@@ -1,6 +1,7 @@
 (() => {
-const API = "https://sia-backend-oef6.onrender.com";
-
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:8000' 
+  : 'https://sia-backend-oef6.onrender.com';
   
   const consentCheckbox = document.getElementById('consentCheckbox');
   const startBtn = document.getElementById('startBtn');
@@ -198,12 +199,7 @@ MBA holder`,
         }
 
         // store agent message on server if session exists
-        if (sessionId) {
-          fetch(`${API}/api/message`, {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ session_pseudoid: sessionId, sender: 'agent', content: msg.text })
-          }).catch(() => {});
-        }
+        
       }, typingDelayMs);
     };
 
